@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
 @layer base {
   body{
       @apply !scrollbar-thin !scrollbar-track-transparent
@@ -10,43 +12,50 @@
 }
 
 @layer components {
-  .light-theme{
-    @apply bg-slate-500
+  .button-theme{
+    @apply bg-gray-600 dark:bg-slate-900
+  }
+  .light-text {
+    @apply text-gray-800
   }
 
-  .dark-theme{
-    @apply bg-gray-600
-  }
-
-  .icon-color{
-    @apply text-sky-800
-  }
-
-  .icon-color-dark{
+  .dark-text {
     @apply text-sky-400
   }
 
-  .base-text{
-    @apply text-black
+  .icon-color{
+    @apply text-sky-200 dark:dark-text
+  }
+  
+  .side-bg{
+    @apply bg-gradient-to-r from-gray-400 to-white via-gray-400 bg-opacity-80
   }
 
-  .base-text-dark{
+  .side-bg-dark{
+    @apply bg-gradient-to-r from-gray-900 to-black via-gray-800 bg-opacity-80
+  }
+  
+  .unhighlighted-text{
+    @apply light-text dark:text-gray-400
+  }
+
+  .highlighted-text{
     @apply text-white
   }
 
-  .side-icon{
-    @apply flex text-gray-400 group-hover:text-sky-600 transition-all
+  .secondary-header{
+    @apply text-2xl highlighted-text font-bold 
   }
 
-  .side-icon-dark{
-    @apply flex text-gray-400 group-hover:text-sky-600 transition-all
+  .social-icon{
+    @apply bg-gray-600 dark:bg-gray-900 hover:bg-sky-300 dark:hover:bg-sky-600 text-white rounded-full h-10 w-10 text-sm p-2 flex items-center justify-center
+  }
+
+  .side-icon{
+    @apply flex unhighlighted-text group-hover:icon-color transition-all
   }
 
   .side-text{
-    @apply flex text-gray-400 group-hover:text-white transition-all font-medium 
-  }
-
-  .side-text-dark{
-    @apply flex text-gray-400 group-hover:text-white transition-all font-medium
+    @apply flex unhighlighted-text group-hover:highlighted-text transition-all font-semibold
   }
 }

@@ -3,8 +3,12 @@ import React, { ReactElement, useEffect, useRef, useState } from 'react';
 
 import DensityMediumIcon from '@mui/icons-material/DensityMedium';
 import ClearIcon from '@mui/icons-material/Clear';
+import CopyrightOutlinedIcon from '@mui/icons-material/CopyrightOutlined';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
+import SideHeader from "./SideHeader";
 import { useScroll } from '../context/ScrollHeight';
+import { useColorMode } from '../context/ColorModeContext';
 
 type Section = {
     id: string,
@@ -38,9 +42,10 @@ const calculateOffSets = (idList:string[]) => {
 }
 
 const SideBar: React.FC<pageProps> = ({title, footer, props}) => {
+    const { mode } = useColorMode()
     const [ showSideBar, setShowSideBar ] = useState<Boolean>(true);
     const [ active, setActive ] = useState<string>("Home")
-    const { activeScroll } = useScroll()
+    const { isScrolled, activeScroll } = useScroll()
     const [ selected, setSelected ] = useState<string>("Home")
     const offSets = useRef<any>()
 
@@ -99,14 +104,14 @@ const SideBar: React.FC<pageProps> = ({title, footer, props}) => {
     
     
     return (
-        <div>
-            <div className={`fixed z-20 h-full w-72 light-theme dark:dark-theme origin-left transition-all duration-500 ${showSideBar ?"ml-0" : "-ml-72 "}`}>
+        <div className={`${mode === "dark" ? 'dark' : ''}`}>
+            <div className={`fixed z-20 h-full w-72 side-bg dark:side-bg-dark animate-gradient-x origin-left transition-all duration-500 ${showSideBar ?"ml-0" : "-ml-72 "}`}>
                 <section className='w-full h-full flex flex-col justify-between'>
-                    <div className='flex flex-col overflow-y-auto'>
-                        <header className='flex text-center text-3xl font-bold w-full justify-center py-8'>
-                            {title}
+                    <div className='flex flex-col overflow-y-auto space-y-10'>
+                        <header className='flex text-center text-3xl font-bold w-full justify-center'>
+                            <SideHeader title={title}/>
                         </header>
-                        <section className='flex flex-col w-full space-y-8 !scrollbar-thin !scrollbar-thumb-black'>
+                        <section className='flex flex-col w-full space-y-6 !scrollbar-thin !scrollbar-thumb-gray-400'>
                         {
                             props?.map((section:Section) => (
                                 
@@ -114,14 +119,14 @@ const SideBar: React.FC<pageProps> = ({title, footer, props}) => {
                                     <div className="flex w-full group justify-center">                                   
                                         {
                                             active == section.id ?
-                                            <li className='flex flex-row group w-4/6 bg-gray-900 rounded-lg p-3 bg-opacity-50 space-x-2 cursor-pointer transition-all delay-150'>
-                                                <p className='flex text-sky-600 transition-all'>{section.icon}</p>
-                                                <p className='flex text-white transition-all font-medium '>{section.title}</p>
+                                            <li className='flex flex-row group w-5/6 bg-black rounded-lg p-2 bg-opacity-20 space-x-2 cursor-pointer transition-all delay-150'>
+                                                <p className='flex icon-color'>{section.icon}</p>
+                                                <p className='flex highlighted-text font-semibold '>{section.title}</p>
                                             </li>
                                             :
-                                            <li className='flex flex-row group w-4/6 rounded-lg p-3 space-x-2 cursor-pointer transition-all delay-150'>
-                                                <p className='side-icon dark:side-icon-dark'>{section.icon}</p>
-                                                <p className='side-text dark:side-text-dark'>{section.title}</p>
+                                            <li className='flex flex-row group w-5/6 rounded-lg p-2 space-x-2 cursor-pointer transition-all delay-150'>
+                                                <p className='side-icon'>{section.icon}</p>
+                                                <p className='side-text'>{section.title}</p>
                                             </li>
                                         }
                                     </div>
@@ -131,28 +136,55 @@ const SideBar: React.FC<pageProps> = ({title, footer, props}) => {
                         </section>
                     </div>
                     <footer className='flex flex-col'>
-                        <p className='flex text-center text-xl w-full justify-center py-8'>
+                        <p className='flex text-center text-sm text-gray-600 w-full justify-center py-8'>
+                            <CopyrightOutlinedIcon className="flex scale-75 opacity-80 pb-1"/>
                             {footer}
                         </p>
                     </footer>
                 </section>
             </div>
+
+            {/*fixed scroll buttons*/}
             
+            {showSideBar ? (
             <button
                 type="button"
                 onClick={() => setShowSideBar(!showSideBar)}
-                className="fixed z-10 light-theme dark:dark-theme rounded-full right-6 top-6 w-10 h-10 lg:scale-0 text-center"
-                >
-                {showSideBar ? (
-                    <Tooltip title="Close">
-                    <ClearIcon className="text-white"/>
-                    </Tooltip>
-                ) : (
-                    <Tooltip title="Open">
-                    <DensityMediumIcon className="text-white"/>
-                    </Tooltip>
-                )}
+                className="fixed z-10 button-theme rounded-full right-6 top-6 w-10 h-10 lg:scale-0 text-center"
+            >
+                <Tooltip title="Close">
+                <ClearIcon className="text-white" />
+                </Tooltip>
             </button>
+            ) : (
+            <button
+                type="button"
+                onClick={() => setShowSideBar(!showSideBar)}
+                className="fixed z-10 button-theme rounded-full right-6 top-6 w-10 h-10 lg:scale-0 text-center"
+            >
+                <Tooltip title="Open">
+                <DensityMediumIcon className="text-white" />
+                </Tooltip>
+            </button>
+            )}
+
+            {isScrolled ? (
+            <button
+                className="fixed transition-all z-10 button-theme rounded-full w-10 h-10 right-5 bottom-5 text-center cursor-pointer"
+                onClick={() =>
+                document
+                    .getElementById("Home")
+                    ?.scrollIntoView({ behavior: "smooth", block: "center" })
+                }
+            >
+                <Tooltip title="Home">
+                <ArrowUpwardIcon className="text-white" />
+                </Tooltip>
+            </button>
+            ) : (
+            <></>
+            )}
+
         </div>
     );
 };

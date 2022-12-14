@@ -2,13 +2,15 @@ import { useEffect, useState, useContext, createContext } from "react";
 var _ = require('lodash');
 
 interface ActiveScroll{
-    setActiveScroll: React.Dispatch<React.SetStateAction<number>>;
-    activeScroll: number
+    setActiveScroll: React.Dispatch<React.SetStateAction<number>>,
+    isScrolled: Boolean,
+    activeScroll: number,
 }
 
 export const ActiveScrollContext = createContext<ActiveScroll>({
     setActiveScroll: () => {},
-    activeScroll: 0
+    isScrolled: false,
+    activeScroll: 0,
 });
 
 interface ActiveScrollContextProviderProps {
@@ -17,10 +19,15 @@ interface ActiveScrollContextProviderProps {
 
 export const ActiveScrollContextProvider = ({ children }:ActiveScrollContextProviderProps) => {
     const [activeScroll, setActiveScroll] = useState<number>(0);
+    const [isScrolled, setIsScrolled]  = useState(false);
 
     useEffect(() => {
-        
         const handleScroll = _.throttle(() => {
+            if (window.scrollY > 0) {
+                setIsScrolled(true)
+            } else {
+                setIsScrolled(false)
+            }
             setActiveScroll(window.scrollY)
         }, 500);
     
@@ -30,7 +37,7 @@ export const ActiveScrollContextProvider = ({ children }:ActiveScrollContextProv
       }, []);
 
     return (
-        <ActiveScrollContext.Provider value = {{ activeScroll, setActiveScroll }}>
+        <ActiveScrollContext.Provider value = {{ isScrolled, activeScroll, setActiveScroll }}>
             {children}
         </ActiveScrollContext.Provider>
     );
