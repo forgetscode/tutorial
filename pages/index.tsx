@@ -13,7 +13,7 @@ export default function Home() {
   const { mode } = useColorMode()
 
   return (
-      <div className="w-screen">
+      <div className="w-full">
         <Head>
           <title>Tutorial</title>
           <link rel='icon' href="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Vsmart_logo.svg/402px-Vsmart_logo.svg.png?20200810165214"/>
